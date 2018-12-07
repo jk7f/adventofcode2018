@@ -52,34 +52,13 @@ input.forEach((item, index) => {
   }
 });
 
-const extremes = [[maxRight, maxTop], [maxLeft, maxTop], [maxRight, maxBot], [maxLeft, maxBot]];
-extremes.forEach(extreme => {
-  const distances = input.map(item => {
-    return {
-      distance: getDistance(extreme[0], item.coords[0], extreme[1], item.coords[1]),
-      inputId: item.id
-    };
-  });
-  const closest = distances.sort((a, b) => a.distance - b.distance)[0];
-  if (distances.filter(item => item.distance === closest.distance).length === 1) {
-    input.find(arrItem => arrItem.id === closest.inputId).edgeNode = true;
-  }
-});
-
+let count = 0;
 for (let x = maxLeft; x < maxRight; x++) {
   for (let y = maxTop; y < maxBot; y++) {
-    const distances = input.map(item => {
-      return {
-        distance: getDistance(x, item.coords[0], y, item.coords[1]),
-        inputId: item.id
-      };
-    });
-    const closest = distances.sort((a, b) => a.distance - b.distance)[0];
-    if (distances.filter(item => item.distance === closest.distance).length === 1) {
-      input.find(arrItem => arrItem.id === closest.inputId).size++;
+    const area = input.reduce((accumulator, item) => accumulator + getDistance(x, item.coords[0], y, item.coords[1]), 0);
+    if (area < 10000) {
+      count++;
     }
   }
 }
-
-input.sort((a, b) => a.size - b.size);
-console.log(input.filter(item => item.edgeNode !== true).pop().size);
+console.log(count);
